@@ -22,6 +22,38 @@ import sys
 clear()
 
 
+class Plotter:
+    """
+        Custom Plotter;
+    """
+
+
+class DataViewer(QFrame):
+    """
+        Docstring;
+    """
+
+    WIDTH, HEIGHT = 240, 180
+
+    STYLESHEET = """
+        background-color: #c9bbaa;
+        color: black;
+        font-size: 22px;
+    """
+
+    def __init__(self, name: str, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.setFixedSize(DataViewer.WIDTH, DataViewer.HEIGHT)
+        self.setStyleSheet(DataViewer.STYLESHEET)
+        self.__name = name
+        self.show()
+
+    @property
+    def name(self):
+        return self.__name
+
+
 class Menu(QMenu):
     """
         Custom Menu that add clicked signal;
@@ -159,7 +191,7 @@ class MainWindow(QMainWindow):
         Docstring;
     """
 
-    WIDTH, HEIGHT = 850, 600
+    WIDTH, HEIGHT = 900, 670
     STYLESHEET = """
         background-color: #ffffff;
     """
@@ -174,6 +206,18 @@ class MainWindow(QMainWindow):
 
         menu_bar = MenuBar(parent=self)
         self.setMenuBar(menu_bar)
+
+        # create the DataViewers;
+        self.heart_rate_viewer = DataViewer(parent=self, name="heart-rate")
+        self.spo2_level_viewer = DataViewer(parent=self, name="spo2-level")
+        self.temperature_viewer = DataViewer(parent=self, name="temperature")
+
+        self.heart_rate_viewer.move(
+            40, MainWindow.HEIGHT - DataViewer.HEIGHT - 30)
+        self.spo2_level_viewer.move(
+            45*2 + DataViewer.WIDTH, MainWindow.HEIGHT - DataViewer.HEIGHT - 30)
+        self.temperature_viewer.move(
+            45*3 + DataViewer.WIDTH * 2, MainWindow.HEIGHT - DataViewer.HEIGHT - 30)
 
 
 def main():
