@@ -1,4 +1,4 @@
-# SPO2/Heart Monitor
+# SPO2/Heart-Rate Monitor
 
 simple arduino project that can monitor spo2 and heart rate
 and view them on computer using Desktop app and store the
