@@ -36,22 +36,158 @@ class DataViewer(QFrame):
     WIDTH, HEIGHT = 240, 180
 
     STYLESHEET = """
-        background-color: #c9bbaa;
+        background-color: #5ba2f4;
+        color: black;
+        font-size: 22px;
+        border-radius: 10px;
+    """
+
+    TITLE_LABEL_STYLESHEET = """
         color: black;
         font-size: 22px;
     """
 
-    def __init__(self, name: str, *args, **kwargs):
+    DATA_LABEL_STYLESHEET = """
+        color: white;
+        font-size: 30px;
+    """
+
+    def __init__(self,
+                 name: str,
+                 title: str = None,
+                 measurement_unit: str = "",
+                 min_value: int = None,
+                 max_value: int = None,
+                 *args,
+                 **kwargs):
+
         super().__init__(*args, **kwargs)
 
         self.setFixedSize(DataViewer.WIDTH, DataViewer.HEIGHT)
         self.setStyleSheet(DataViewer.STYLESHEET)
         self.__name = name
+
+        if title is None:
+            self.title = self.name
+        else:
+            self.title = title
+
+        # default data simply out when we don't have any,
+        # data we want to view three dashes;
+        self.data = "---"
+        self.measurement_unit = measurement_unit
+
+        self.__min_value = min_value
+        self.__max_value = max_value
+
+        self.__setup_ui()
+
         self.show()
+
+    def __setup_ui(self):
+        """
+            :ARGS:
+                None;
+
+            :RETURNS:
+                return None;
+
+            :INFO:
+                setup all the ui for the DataViewer;  
+
+        """
+
+        self.__title_label = QLabel(parent=self, text=self.title.title())
+        self.__title_label.setStyleSheet(DataViewer.TITLE_LABEL_STYLESHEET)
+        self.__title_label.setFixedSize(DataViewer.WIDTH-10, 40)
+        self.__title_label.setAlignment(Qt.AlignCenter)
+        self.__title_label.move(5, 5)
+
+        self.__data_label = QLabel(parent=self, text=str(self.data))
+        self.__data_label.setStyleSheet(DataViewer.DATA_LABEL_STYLESHEET)
+        self.__data_label.setFixedSize(
+            DataViewer.WIDTH-10, DataViewer.HEIGHT-50)
+        self.__data_label.setAlignment(Qt.AlignCenter)
+        self.__data_label.move(5, 45)
+
+        return None
+
+    def update_data(self, new_value: str):
+        """
+            :ARGS:
+                new_value:str => new data;
+
+            :RETURNS:
+                return None;
+
+            :INFO:
+                update the DataViewer with new data;
+
+        """
+
+        self.data = new_value
+
+        self.__data_label.setText(f"{self.data} {self.measurement_unit}")
+
+        return None
+
+    def set_min_value(self, value: int):
+        """
+            :ARGS:
+                value:int => the new min value;
+
+            :RETURNS:
+                return None;
+
+            :INFO:
+                change the min value for the alert;
+        """
+
+        self.__min_value = value
+
+        return None
+
+    def set_max_value(self, value: int):
+        """
+            :ARGS:
+                value:int => the new max value;
+
+            :RETURNS:
+                return None;
+
+            :INFO:
+                change the max value for the alert;
+        """
+
+        self.__max_value = value
+
+        return None
+
+    def alert(self):
+        """
+            :ARGS:
+                None;
+
+            :RETURNS:
+                return None;
+
+            :INFO:
+                start the alarm;
+        """
+
+        return None
 
     @property
     def name(self):
         return self.__name
+
+    @property
+    def min_value(self):
+        return self.__min_value
+
+    @property
+    def max_value(self):
+        return self.__max_value
 
 
 class Menu(QMenu):
@@ -208,9 +344,12 @@ class MainWindow(QMainWindow):
         self.setMenuBar(menu_bar)
 
         # create the DataViewers;
-        self.heart_rate_viewer = DataViewer(parent=self, name="heart-rate")
-        self.spo2_level_viewer = DataViewer(parent=self, name="spo2-level")
-        self.temperature_viewer = DataViewer(parent=self, name="temperature")
+        self.heart_rate_viewer = DataViewer(
+            parent=self, name="heart-rate", measurement_unit="bpm")
+        self.spo2_level_viewer = DataViewer(
+            parent=self, name="spo2-level", measurement_unit="%")
+        self.temperature_viewer = DataViewer(
+            parent=self, name="temperature", measurement_unit="°C")
 
         self.heart_rate_viewer.move(
             40, MainWindow.HEIGHT - DataViewer.HEIGHT - 30)
