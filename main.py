@@ -14,6 +14,7 @@
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
+import pyqtgraph as pg
 from utils import *
 import os
 import sys
@@ -22,10 +23,55 @@ import sys
 clear()
 
 
-class Plotter:
+class Plotter(pg.PlotWidget):
     """
         Custom Plotter;
     """
+
+    BACKGROUND_COLOR = "black"
+
+    STYLESHEET = """
+        border: 8px solid #5ba2f4;
+        border-radius: 10px;
+    """
+
+    def __init__(self, width: int, height: int, name: str, pen_color: str = "#cd1b5b", *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.__width = width
+        self.__height = height
+        self.__name = name
+
+        self.pen = pg.mkPen(color=pen_color, width=2.4)
+
+        self.setGeometry(0, 0, self.__width, self.__height)
+
+        # hold the x data axis data;
+        # self.x = [0 for _ in range(100)]
+
+        # # hold the y data axis data;
+        # self.y = [*self.x]
+
+        # # we need line reference to update the plot,
+        # # and we can get the line reference when we,
+        # # first plot the data;
+        # self.line_ref = self.plot(self.x, self.y, pen=self.pen)
+
+        # now hide the axises values;
+        self.getAxis("bottom").setStyle(showValues=False)
+        self.getAxis("left").setStyle(showValues=False)
+
+        self.showGrid(x=True, y=True, alpha=1.0)
+
+        self.setContentsMargins(0, 0, 0, 0)
+
+        self.setBackground(Plotter.BACKGROUND_COLOR)
+
+        self.setStyleSheet(Plotter.STYLESHEET)
+
+    @property
+    def name(self):
+        return self.__name
 
 
 class DataViewer(QFrame):
@@ -343,6 +389,18 @@ class MainWindow(QMainWindow):
         menu_bar = MenuBar(parent=self)
         self.setMenuBar(menu_bar)
 
+        # create the plotters;
+        self.heart_rate_plotter = Plotter(
+            parent=self, name="heart-rate", width=MainWindow.WIDTH-85, height=200)
+        self.spo2_level_plotter = Plotter(
+            parent=self, name="spo2-level", width=450, height=200)
+        self.temperature_plotter = Plotter(
+            parent=self, name="temperature", width=MainWindow.WIDTH - 545, height=200)
+
+        self.heart_rate_plotter.move(40, 40)
+        self.spo2_level_plotter.move(40, 250)
+        self.temperature_plotter.move(500, 250)
+
         # create the DataViewers;
         self.heart_rate_viewer = DataViewer(
             parent=self, name="heart-rate", measurement_unit="bpm")
@@ -352,11 +410,11 @@ class MainWindow(QMainWindow):
             parent=self, name="temperature", measurement_unit="°C")
 
         self.heart_rate_viewer.move(
-            40, MainWindow.HEIGHT - DataViewer.HEIGHT - 30)
+            40, MainWindow.HEIGHT - DataViewer.HEIGHT - 25)
         self.spo2_level_viewer.move(
-            45*2 + DataViewer.WIDTH, MainWindow.HEIGHT - DataViewer.HEIGHT - 30)
+            45*2 + DataViewer.WIDTH, MainWindow.HEIGHT - DataViewer.HEIGHT - 25)
         self.temperature_viewer.move(
-            45*3 + DataViewer.WIDTH * 2, MainWindow.HEIGHT - DataViewer.HEIGHT - 30)
+            45*3 + DataViewer.WIDTH * 2, MainWindow.HEIGHT - DataViewer.HEIGHT - 25)
 
 
 def main():
