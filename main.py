@@ -20,3 +20,37 @@ import sys
 
 # wipe terminal screen;
 clear()
+
+
+class MainWindow(QMainWindow):
+    """
+        Docstring;
+    """
+
+    WIDTH, HEIGHT = 850, 600
+    STYLESHEET = """
+        background-color: #ffffff;
+    """
+    TITLE = "Arduino HST Monitor"
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.setFixedSize(MainWindow.WIDTH, MainWindow.HEIGHT)
+        self.setStyleSheet(MainWindow.STYLESHEET)
+        self.setWindowTitle(MainWindow.TITLE)
+
+
+def main():
+
+    app = QApplication(sys.argv)
+
+    root = MainWindow()
+
+    root.show()
+
+    sys.exit(app.exec())
+
+
+if __name__ == "__main__":
+    main()
