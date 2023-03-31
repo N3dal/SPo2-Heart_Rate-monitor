@@ -11,3 +11,12 @@
 # ///
 # ///
 # -----------------------------------------------------------------
+from PyQt5.QtCore import *
+from PyQt5.QtGui import *
+from PyQt5.QtWidgets import *
+from utils import *
+import os
+import sys
+
+# wipe terminal screen;
+clear()
