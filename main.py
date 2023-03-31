@@ -55,7 +55,7 @@ class MenuBar(QMenuBar):
     """
 
     STYLESHEET = """
-        background-color: #c9bbaa;
+        background-color: #5ba2f4;
         color: black;
         font-size: 15px;
     """
