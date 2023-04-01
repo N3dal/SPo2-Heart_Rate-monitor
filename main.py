@@ -490,6 +490,23 @@ class MainWindow(QMainWindow):
 
         return None
 
+    def closeEvent(self, e):
+        """
+            :ARGS:
+                e => event;
+
+            :RETURNS:
+                return None;
+
+            :INFO:
+                close event for the main window;
+        """
+
+        # and we do this to make sure we will close everything when,
+        # we close the main window for example what if the settings window,
+        # is open and we close the main window;
+        sys.exit(0)
+
 
 def main():
 
