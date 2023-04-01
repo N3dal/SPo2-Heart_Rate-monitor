@@ -16,6 +16,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 import pyqtgraph as pg
 from utils import *
+from settings import (SettingsWindow)
 from defaults import *
 import os
 import sys
@@ -294,6 +295,9 @@ class MenuBar(QMenuBar):
 
         self.setStyleSheet(MenuBar.STYLESHEET)
 
+        # create the settings Window;
+        self.__settings_window = SettingsWindow()
+
         # create the MenuBar options;
         file_menu = self.addMenu("&File")
 
@@ -362,7 +366,8 @@ class MenuBar(QMenuBar):
                 process settings menu action when its clicked;;
         """
 
-        print("Settings Menu Clicked")
+        self.__settings_window.show()
+        self.__settings_window.activateWindow()
 
         return None
 
