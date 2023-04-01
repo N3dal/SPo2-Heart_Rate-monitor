@@ -69,6 +69,20 @@ class Plotter(pg.PlotWidget):
 
         self.setStyleSheet(Plotter.STYLESHEET)
 
+    def update(self, data: list):
+        """
+            :ARGS:
+                data:list => the new data;
+
+            :RETURNS:
+                return None;
+
+            :INFO:
+                update the plot data;
+        """
+
+        return None
+
     @property
     def name(self):
         return self.__name
