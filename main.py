@@ -16,6 +16,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 import pyqtgraph as pg
 from utils import *
+from defaults import *
 import os
 import sys
 
@@ -391,6 +392,20 @@ class MainWindow(QMainWindow):
     STYLESHEET = """
         background-color: #ffffff;
     """
+    START_BUTTON_STYLESHEET = """
+        QPushButton{
+            background-color: #f0f0f0;
+            color: black;
+            border: 1px solid black;
+            border-radius: 8px;
+        }
+        
+        QPushButton:hover{
+            border: 2px solid black;
+            
+        }
+    
+    """
     TITLE = "Arduino HST Monitor"
 
     def __init__(self, *args, **kwargs):
@@ -411,9 +426,9 @@ class MainWindow(QMainWindow):
         self.temperature_plotter = Plotter(
             parent=self, name="temperature", width=MainWindow.WIDTH - 545, height=200)
 
-        self.heart_rate_plotter.move(40, 40)
-        self.spo2_level_plotter.move(40, 250)
-        self.temperature_plotter.move(500, 250)
+        self.heart_rate_plotter.move(30, 40)
+        self.spo2_level_plotter.move(30, 250)
+        self.temperature_plotter.move(490, 250)
 
         # create the DataViewers;
         self.heart_rate_viewer = DataViewer(
@@ -424,11 +439,51 @@ class MainWindow(QMainWindow):
             parent=self, name="temperature", measurement_unit="°C")
 
         self.heart_rate_viewer.move(
-            40, MainWindow.HEIGHT - DataViewer.HEIGHT - 25)
+            30, MainWindow.HEIGHT - DataViewer.HEIGHT - 25)
         self.spo2_level_viewer.move(
-            45*2 + DataViewer.WIDTH, MainWindow.HEIGHT - DataViewer.HEIGHT - 25)
+            40*2 + DataViewer.WIDTH, MainWindow.HEIGHT - DataViewer.HEIGHT - 25)
         self.temperature_viewer.move(
-            45*3 + DataViewer.WIDTH * 2, MainWindow.HEIGHT - DataViewer.HEIGHT - 25)
+            40*3 + DataViewer.WIDTH * 2, MainWindow.HEIGHT - DataViewer.HEIGHT - 25)
+
+        # create play and stop pictures for the button;
+        self.__play_picture = QIcon(UI.PLAY_PICTURE_PATH)
+        self.__stop_picture = QIcon(UI.STOP_PICTURE_PATH)
+
+        # create an indicator for button status;
+        self.__start_button_status = False
+
+        self.start_button = QPushButton(parent=self)
+        self.start_button.setFixedSize(43, 35)
+        self.start_button.setIcon(self.__play_picture)
+        self.start_button.setStyleSheet(MainWindow.START_BUTTON_STYLESHEET)
+        self.start_button.setCursor(QCursor(Qt.PointingHandCursor))
+        self.start_button.clicked.connect(self.__start_button_click_event)
+        self.start_button.move(MainWindow.WIDTH - 48, 40)
+
+    def __start_button_click_event(self):
+        """
+            :ARGS:
+                None;
+
+            :RETURNS:
+                return None;
+
+            :INFO:
+                start button event;
+        """
+        self.__start_button_status = False if self.__start_button_status else True
+
+        if self.__start_button_status:
+            # we want to stop;
+            # set the icon to stop;
+            self.start_button.setIcon(self.__stop_picture)
+
+        else:
+            # we want to start;
+            # set the icon to play;
+            self.start_button.setIcon(self.__play_picture)
+
+        return None
 
 
 def main():
