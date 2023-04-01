@@ -38,9 +38,13 @@ class SerialHandler:
             Docstring;
         """
 
-        received_data = pyqtSignal(str)
+        received_data = pyqtSignal(bytes)
         closed = pyqtSignal()
         opened = pyqtSignal()
+
+        # instead of emitting 'str' try to build,
+        # custom Exceptions and emitting them.
+        error = pyqtSignal(str)
 
     def __init__(self):
 
@@ -86,6 +90,7 @@ class SerialHandler:
             self.signals.opened.emit()
 
         except:
+            self.signals.error.emit("can't open the port")
             raise Exception(
                 f"Can't open the port {device_name=} with buad_rate {buad_rate=}")
 
@@ -155,13 +160,9 @@ class SerialHandler:
                 make sure that your line ends with '\n';
         """
 
-        # if not self.__active_connections:
-        #     # if theres no port available;
-        #     raise Exception("Theres no port to read from it!!!")
-
         for device in self.__active_connections:
             if device.name == device_name:
-                self.data = device.readline().decode()
+                self.data = device.readline()
                 self.signals.received_data.emit(self.data)
 
         return self.data
@@ -186,8 +187,9 @@ class SerialHandler:
         return self.__active_connections
 
 
-s = SerialHandler()
-s.open_connection(device_name="/dev/ttyACM0")
-print(s.read("/dev/ttyACM0"))
+# s = SerialHandler()
+# s.open_connection(device_name="/dev/ttyACM0")
+# while True:
+#     print(s.read("/dev/ttyACM0"))
 
 # s.read("fine")
