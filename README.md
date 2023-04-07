@@ -8,4 +8,5 @@ monitored data into database, or export data into different formats and also can
 
 
 ## Demo:
-![screenshot1]("./src/screenshot1.png)
+
+![screenshot1]("./src/screenshot1.png")
